@@ -71,9 +71,9 @@ npm start
 
 | Role | Email | Password | Access Level |
 | :--- | :--- | :--- | :--- |
-| **OWNER** | `owner@ironpulse.in` | `Owner@123456` | Full gym access, owner financials, expenses, staff management, settings, refunds |
-| **STAFF (Reception)** | `priya@ironpulse.in` | `Staff@123456` | Front-desk reception, member check-ins, fee collection, renewals, follow-ups |
-| **STAFF (Reception)** | `rahul@ironpulse.in` | `Staff@123456` | Front-desk reception, member check-ins, fee collection, renewals, follow-ups |
+| **OWNER** | `owner@ironpulse.in` | `Owner@12345` | Full gym access, owner financials, expenses, staff management, settings, refunds |
+| **STAFF (Reception)** | `priya@ironpulse.in` | `Staff@12345` | Front-desk reception, member check-ins, fee collection, renewals, follow-ups |
+| **STAFF (Reception)** | `rahul@ironpulse.in` | `Staff@12345` | Front-desk reception, member check-ins, fee collection, renewals, follow-ups |
 
 ---
 
