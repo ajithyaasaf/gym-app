@@ -141,3 +141,4 @@ WHERE action = 'LOGIN_FAILED'
 ORDER BY created_at DESC
 LIMIT 50;
 ```
+

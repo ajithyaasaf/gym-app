@@ -188,3 +188,4 @@ describe("Attendance, Absence Detection, and Follow-Up Workflows", () => {
     expect(link).toContain(encodeURIComponent("Hello Arun, your membership renewal is due on 31 Oct."));
   });
 });
+

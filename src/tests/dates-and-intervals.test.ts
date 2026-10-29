@@ -123,3 +123,4 @@ describe("Date Rules, Interval Calculations, and Clamping (Scenario 8 & 9)", () 
     expect(formatDisplayDate(null)).toBe("—");
   });
 });
+

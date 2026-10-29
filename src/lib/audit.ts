@@ -36,3 +36,4 @@ export async function logAuditEvent(params: {
     ipAddress: params.ipAddress || null,
   });
 }
+

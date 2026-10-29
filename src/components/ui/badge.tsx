@@ -59,3 +59,4 @@ export function StatusBadge({ status }: { status: string }) {
       return <Badge variant="neutral">{status}</Badge>;
   }
 }
+

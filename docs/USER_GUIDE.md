@@ -125,3 +125,4 @@ The Attendance screen is optimized for lightning-fast reception check-in during 
 2. Click **Issue Refund**.
 3. Enter the refund amount (cannot exceed the remaining unrefunded payment) and mandatory business reason.
 4. Confirm. The system deducts the refunded amount from net collections, restores the member's balance, and writes a permanent audit record.
+

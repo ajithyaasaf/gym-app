@@ -685,3 +685,4 @@ export const followUpsRelations = relations(followUps, ({ one, many }) => ({
   }),
   logs: many(followUpLogs),
 }));
+

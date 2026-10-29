@@ -182,3 +182,4 @@ export default function NavHeader({ user, gymName }: NavHeaderProps) {
     </header>
   );
 }
+

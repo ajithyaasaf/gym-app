@@ -90,3 +90,4 @@ export type FollowUpOutcome =
 
 export const DEFAULT_ABSENCE_THRESHOLD_DAYS = 10;
 export const RENEWAL_WARNING_DAYS = 7;
+

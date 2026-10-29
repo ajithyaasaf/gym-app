@@ -166,3 +166,4 @@ IronPulse implements a fixed, dual-role access control model. No custom permissi
 * Member photos and expense receipt attachments are validated against magic bytes (JPEG, PNG, WebP, PDF) to prevent malicious executable uploads.
 * File sizes are capped at 5 MB.
 * Files are stored in private object storage; no files are kept in server instance storage or encoded as base64 database blobs.
+

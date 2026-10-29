@@ -31,3 +31,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Failed to generate report" }, { status: 500 });
   }
 }
+

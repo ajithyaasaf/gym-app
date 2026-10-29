@@ -53,3 +53,4 @@ export function buildWhatsAppLink(phone: string, text: string): string {
   const encodedText = encodeURIComponent(text);
   return `https://wa.me/${destination}?text=${encodedText}`;
 }
+

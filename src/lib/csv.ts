@@ -32,3 +32,4 @@ export function generateCsv(headers: string[], rows: unknown[][]): string {
   const bodyLines = rows.map((row) => row.map(sanitizeCsvCell).join(","));
   return utf8Bom + [headerLine, ...bodyLines].join("\r\n");
 }
+

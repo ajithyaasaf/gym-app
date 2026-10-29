@@ -46,3 +46,4 @@ export async function getNextReceiptNumber(tx?: Parameters<Parameters<typeof db.
     sequenceNumber: seqNum,
   };
 }
+

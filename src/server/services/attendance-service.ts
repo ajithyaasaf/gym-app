@@ -341,3 +341,4 @@ export async function getAbsentMembers(
 
   return absentList;
 }
+

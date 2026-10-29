@@ -472,3 +472,4 @@ export default function ExpensesLedgerView() {
     </div>
   );
 }
+

@@ -460,3 +460,4 @@ export default function FollowUpsView({ initialTab, userRole }: FollowUpsViewPro
     </div>
   );
 }
+

@@ -149,3 +149,4 @@ BOOTSTRAP_OWNER_PASSWORD=ReplaceWithStrongPassword#2026
    * Point your domain CNAME / A-records to Vercel DNS (`cname.vercel-dns.com`).
    * Verify HTTPS certificate generation.
    * Sign in at `https://gym.ironpulse.in/login` with your bootstrapped owner credentials.
+

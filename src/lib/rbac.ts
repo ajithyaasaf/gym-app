@@ -41,3 +41,4 @@ export function assertPermission(role: UserRole, permission: Permission): void {
     throw new Error(`FORBIDDEN: Role '${role}' lacks permission '${permission}'`);
   }
 }
+

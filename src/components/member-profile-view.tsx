@@ -1152,3 +1152,4 @@ export default function MemberProfileView({
     </div>
   );
 }
+

@@ -112,3 +112,4 @@ class LocalStorageAdapter implements StorageAdapter {
 }
 
 export const storageAdapter: StorageAdapter = new LocalStorageAdapter();
+

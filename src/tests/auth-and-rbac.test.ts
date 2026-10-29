@@ -126,3 +126,4 @@ describe("Authentication, Session Revocation, and Fixed Role-Based Access Contro
     ).rejects.toThrow(/Cannot deactivate the final active Owner/);
   });
 });
+

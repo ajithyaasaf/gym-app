@@ -142,3 +142,4 @@ export default async function PrintReceiptPage({
     </div>
   );
 }
+

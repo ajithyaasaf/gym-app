@@ -235,3 +235,4 @@ describe("Members, Enquiries, Pauses, and Concurrency Scenarios", () => {
     ).rejects.toThrow(/IDEMPOTENCY_CONFLICT/);
   });
 });
+
