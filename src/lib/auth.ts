@@ -89,12 +89,38 @@ export async function deleteSessionCookie(): Promise<void> {
 }
 
 /**
- * Get current session from cookie, validate from DB, check expiry and user active state.
+ * Get current session from cookie or request, validate from DB, check expiry and user active state.
  */
-export async function getCurrentSession(): Promise<CurrentSession | null> {
+export async function getCurrentSession(
+  tokenOrReq?: string | { cookies?: { get: (name: string) => { value?: string } | undefined }; headers?: Headers }
+): Promise<CurrentSession | null> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+    let token: string | undefined;
+
+    if (typeof tokenOrReq === "string") {
+      token = tokenOrReq;
+    } else if (tokenOrReq) {
+      if (tokenOrReq.cookies && typeof tokenOrReq.cookies.get === "function") {
+        token = tokenOrReq.cookies.get(SESSION_COOKIE_NAME)?.value;
+      }
+      if (!token && tokenOrReq.headers && typeof tokenOrReq.headers.get === "function") {
+        const cookieHeader = tokenOrReq.headers.get("cookie");
+        if (cookieHeader) {
+          const match = cookieHeader.match(new RegExp(`(?:^|;\\s*)${SESSION_COOKIE_NAME}=([^;]+)`));
+          if (match) token = decodeURIComponent(match[1]);
+        }
+      }
+    }
+
+    if (!token) {
+      try {
+        const cookieStore = await cookies();
+        token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+      } catch {
+        // Ignored if outside request store
+      }
+    }
+
     if (!token) return null;
 
     const result = await db
@@ -167,8 +193,10 @@ export async function revokeAllUserSessions(userId: string): Promise<void> {
 /**
  * Ensure user is logged in. Throws error or redirects.
  */
-export async function requireAuth(): Promise<CurrentSession> {
-  const current = await getCurrentSession();
+export async function requireAuth(
+  tokenOrReq?: string | { cookies?: { get: (name: string) => { value?: string } | undefined }; headers?: Headers }
+): Promise<CurrentSession> {
+  const current = await getCurrentSession(tokenOrReq);
   if (!current) {
     throw new Error("UNAUTHORIZED");
   }
@@ -178,8 +206,10 @@ export async function requireAuth(): Promise<CurrentSession> {
 /**
  * Ensure user has specific role (e.g. OWNER).
  */
-export async function requireOwner(): Promise<CurrentSession> {
-  const current = await requireAuth();
+export async function requireOwner(
+  tokenOrReq?: string | { cookies?: { get: (name: string) => { value?: string } | undefined }; headers?: Headers }
+): Promise<CurrentSession> {
+  const current = await requireAuth(tokenOrReq);
   if (current.user.role !== USER_ROLES.OWNER) {
     throw new Error("FORBIDDEN: Owner permission required");
   }

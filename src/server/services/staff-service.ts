@@ -68,6 +68,10 @@ export async function deactivateStaffAccount(params: {
   targetUserId: string;
   performedByUserId: string;
 }) {
+  if (!params.targetUserId) {
+    throw new Error("targetUserId is required");
+  }
+
   return db.transaction(async (tx) => {
     const targetRows = await tx
       .select()

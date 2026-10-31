@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { db } from "@/db";
 import { users, sessions } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import {
   hashPassword,
   verifyPassword,
@@ -23,11 +23,11 @@ describe("Authentication, Session Revocation, and Fixed Role-Based Access Contro
   let staffUser: { id: string; email: string };
 
   beforeAll(async () => {
-    // Look up bootstrapped owner
+    // Look up bootstrapped active owner
     const owners = await db
       .select()
       .from(users)
-      .where(eq(users.role, USER_ROLES.OWNER))
+      .where(and(eq(users.role, USER_ROLES.OWNER), eq(users.isActive, true)))
       .limit(1);
 
     if (owners.length > 0) {

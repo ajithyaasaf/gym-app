@@ -7,7 +7,7 @@ import { createEnquiry } from "@/server/services/enquiry-service";
 
 export async function GET(req: NextRequest) {
   try {
-    const current = await getCurrentSession();
+    const current = await getCurrentSession(req);
     if (!current) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const current = await getCurrentSession();
+    const current = await getCurrentSession(req);
     if (!current) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

@@ -10,7 +10,7 @@ import { getTodayISTString } from "@/lib/dates";
 
 export async function GET(req: NextRequest) {
   try {
-    const current = await getCurrentSession();
+    const current = await getCurrentSession(req);
     if (!current) {
       return new Response("Unauthorized", { status: 401 });
     }

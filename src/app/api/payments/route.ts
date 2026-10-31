@@ -8,7 +8,7 @@ import { withIdempotency } from "@/lib/idempotency";
 
 export async function GET(req: NextRequest) {
   try {
-    const current = await getCurrentSession();
+    const current = await getCurrentSession(req);
     if (!current) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -75,12 +75,12 @@ export async function GET(req: NextRequest) {
     // If search filter is active (filter by member name, phone, code, or receipt number)
     const filteredRows = search
       ? rows.filter(
-          (r) =>
-            r.memberName.toLowerCase().includes(search.toLowerCase()) ||
-            r.memberCode.toLowerCase().includes(search.toLowerCase()) ||
-            r.memberPhone.includes(search) ||
-            r.receiptNumber?.toLowerCase().includes(search.toLowerCase())
-        )
+        (r) =>
+          r.memberName.toLowerCase().includes(search.toLowerCase()) ||
+          r.memberCode.toLowerCase().includes(search.toLowerCase()) ||
+          r.memberPhone.includes(search) ||
+          r.receiptNumber?.toLowerCase().includes(search.toLowerCase())
+      )
       : rows;
 
     return NextResponse.json({
@@ -100,7 +100,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const current = await getCurrentSession();
+    const current = await getCurrentSession(req);
     if (!current) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

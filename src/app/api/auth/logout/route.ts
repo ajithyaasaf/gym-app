@@ -3,7 +3,7 @@ import { getCurrentSession, revokeSession, deleteSessionCookie } from "@/lib/aut
 
 export async function POST(req: NextRequest) {
   try {
-    const current = await getCurrentSession();
+    const current = await getCurrentSession(req);
     if (current) {
       await revokeSession(current.session.id);
     }

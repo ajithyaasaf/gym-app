@@ -22,7 +22,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const current = await getCurrentSession();
+    const current = await getCurrentSession(req);
     if (!current) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const current = await getCurrentSession();
+    const current = await getCurrentSession(req);
     if (!current) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

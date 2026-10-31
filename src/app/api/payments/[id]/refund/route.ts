@@ -9,7 +9,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const current = await getCurrentSession();
+    const current = await getCurrentSession(req);
     if (!current) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

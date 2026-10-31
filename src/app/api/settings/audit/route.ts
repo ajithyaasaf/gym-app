@@ -7,7 +7,7 @@ import { USER_ROLES } from "@/lib/constants";
 
 export async function GET(req: NextRequest) {
   try {
-    const current = await getCurrentSession();
+    const current = await getCurrentSession(req);
     if (!current) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
