@@ -181,11 +181,47 @@ export default function FollowUpsView({ initialTab, userRole }: FollowUpsViewPro
           <p className="text-xs text-slate-500 mt-2">Loading follow-ups...</p>
         </div>
       ) : items.length === 0 ? (
-        <Card className="py-12 text-center p-6">
-          <p className="text-sm font-semibold text-slate-700">All clear! No pending follow-ups</p>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            There are no members or callbacks matching this list right now. Great job keeping on top of gym reception!
-          </p>
+        <Card className="py-12 text-center p-6 space-y-3">
+          <CheckCircle2 className="h-8 w-8 text-emerald-500 mx-auto" />
+          <div>
+            <p className="text-sm font-semibold text-slate-800">
+              {tab === "DUE_TODAY" ? "All clear for today!" : "No records found in this category"}
+            </p>
+            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+              {tab === "DUE_TODAY"
+                ? "No follow-up calls are scheduled for today. Check other categories to engage members:"
+                : "There are no members or callbacks matching this list right now."}
+            </p>
+          </div>
+
+          {tab === "DUE_TODAY" && (
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setTab("ABSENT")}
+                className="text-xs text-slate-700"
+              >
+                Absent Members (10+ Days)
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setTab("RENEWAL_UPCOMING")}
+                className="text-xs text-slate-700"
+              >
+                Upcoming Renewals
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setTab("OVERDUE_BALANCE")}
+                className="text-xs text-slate-700"
+              >
+                Fee Dues
+              </Button>
+            </div>
+          )}
         </Card>
       ) : tab === "ABSENT" ? (
         /* Absent Active Members View */

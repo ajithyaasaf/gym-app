@@ -54,6 +54,10 @@ export default function AttendanceDeskView({ userRole }: AttendanceDeskViewProps
   const [todayList, setTodayList] = useState<AttendanceRecord[]>([]);
   const [loadingList, setLoadingList] = useState(true);
 
+  // Active members for quick 1-tap check-in when search is blank
+  const [activeMembers, setActiveMembers] = useState<any[]>([]);
+  const [loadingActive, setLoadingActive] = useState(false);
+
   const fetchTodayAttendance = useCallback(async () => {
     setLoadingList(true);
     try {
@@ -69,9 +73,25 @@ export default function AttendanceDeskView({ userRole }: AttendanceDeskViewProps
     }
   }, []);
 
+  const fetchActiveMembers = useCallback(async () => {
+    setLoadingActive(true);
+    try {
+      const res = await fetch(`/api/members?status=ACTIVE&limit=12`);
+      if (res.ok) {
+        const json = await res.json();
+        setActiveMembers(json.members || []);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingActive(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchTodayAttendance();
-  }, [fetchTodayAttendance]);
+    fetchActiveMembers();
+  }, [fetchTodayAttendance, fetchActiveMembers]);
 
   // Debounced search for candidate members
   useEffect(() => {
@@ -138,6 +158,7 @@ export default function AttendanceDeskView({ userRole }: AttendanceDeskViewProps
       setSelectedMember(null);
       setExceptionReason("");
       fetchTodayAttendance();
+      fetchActiveMembers();
     } catch {
       setStatusMessage({
         type: "error",
@@ -162,6 +183,7 @@ export default function AttendanceDeskView({ userRole }: AttendanceDeskViewProps
       if (res.ok) {
         alert("Attendance record voided successfully.");
         fetchTodayAttendance();
+        fetchActiveMembers();
       } else {
         const data = await res.json();
         alert(data.error || "Failed to void attendance.");
@@ -219,13 +241,13 @@ export default function AttendanceDeskView({ userRole }: AttendanceDeskViewProps
                 setSearch(e.target.value);
                 setSelectedMember(null);
               }}
-              placeholder="Type member name, phone (e.g. 98765...), or Member ID (MEM-1001)..."
+              placeholder="Search by member name, phone (or last 4 digits e.g. 1001), or Member ID..."
               className="flex h-11 w-full min-h-[44px] rounded-md border border-slate-300 bg-white pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 shadow-sm"
               autoFocus
             />
           </div>
 
-          {/* Search Candidate Dropdown List */}
+          {/* Search Candidate Dropdown List (when user is typing) */}
           {candidates.length > 0 && !selectedMember && (
             <div className="border border-slate-200 rounded-lg divide-y divide-slate-100 bg-white shadow-sm overflow-hidden text-xs">
               {candidates.map((m) => {
@@ -266,6 +288,93 @@ export default function AttendanceDeskView({ userRole }: AttendanceDeskViewProps
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {/* Active Members Ready for Check-in (shown when search is empty) */}
+          {!search.trim() && !selectedMember && (
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-700 px-1">
+                <span className="flex items-center gap-1.5">
+                  <UserCheck className="h-3.5 w-3.5 text-indigo-600" />
+                  <span>Active Members — Quick Check-in</span>
+                </span>
+                <span className="text-[11px] font-normal text-slate-400">
+                  Tap Check In or select any member
+                </span>
+              </div>
+
+              {loadingActive ? (
+                <div className="p-6 text-center text-xs text-slate-400">
+                  Loading active members...
+                </div>
+              ) : activeMembers.length === 0 ? (
+                <div className="p-6 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-lg">
+                  No active members found. Add or renew members to log attendance.
+                </div>
+              ) : (
+                <div className="border border-slate-200 rounded-lg divide-y divide-slate-100 bg-white shadow-sm overflow-hidden text-xs">
+                  {activeMembers.map((m) => {
+                    const alreadyCheckedIn = todayList.some(
+                      (t) => t.memberId === m.id && !t.isVoided
+                    );
+
+                    return (
+                      <div
+                        key={m.id}
+                        className="p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-slate-50 transition-colors"
+                      >
+                        <div
+                          onClick={() => setSelectedMember(m)}
+                          className="cursor-pointer flex-1"
+                        >
+                          <div className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                            <span>{m.name}</span>
+                            <span className="font-mono text-xs font-normal text-slate-500">
+                              ({m.memberCode})
+                            </span>
+                          </div>
+                          <div className="text-slate-500 font-mono text-[11px] mt-0.5">
+                            {m.phone} • {m.latestTerm?.planName || "Active Plan"}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          {m.balancePaise > 0 ? (
+                            <Badge variant="warning" className="font-semibold text-[11px]">
+                              {formatINR(m.balancePaise)} Due
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="neutral"
+                              className="text-[11px] text-emerald-700 bg-emerald-50 border-emerald-200"
+                            >
+                              Fees Paid
+                            </Badge>
+                          )}
+
+                          {alreadyCheckedIn ? (
+                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md">
+                              <CheckCircle2 className="h-3 w-3" />
+                              <span>Checked In</span>
+                            </span>
+                          ) : (
+                            <Button
+                              size="sm"
+                              onClick={() => handleMarkAttendance(m, false)}
+                              disabled={submitting}
+                              className="h-8 text-xs bg-emerald-600 hover:bg-emerald-700 text-white gap-1"
+                            >
+                              <UserCheck className="h-3.5 w-3.5" />
+                              <span>Check In</span>
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
